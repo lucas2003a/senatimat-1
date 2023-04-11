@@ -9,9 +9,9 @@ class Escuela extends Conexion{
   public function __CONSTRUCT(){
     $this->accesoBD= parent::getConexion();
   }
-  public function listarEscuela(){
+  public function listarEscuelas(){
       try {
-        $consulta = $this->accesoBD->prepare("CALL spu_escuelas_listar()");
+        $consulta = $this->accesoBD->prepare("call spu_escuelas_listar();");
         $consulta->execute();
         return $consulta->fetchAll(PDO::FETCH_ASSOC);
       } 
