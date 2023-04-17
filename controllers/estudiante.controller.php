@@ -40,5 +40,30 @@ if (isset($_POST['operacion'])){
     $estudiante->registrarEstudiante($datosGuardar);
   }
 
+  $datosObtenidos = $estudiante->listarEstudiante();
+
+  if ($datosObtenidos){
+    $numeroFila = 1;
+
+    foreach ($datosObtenidos as $estudiante){
+      echo "
+        <tr>
+          <td>{$numeroFila}</td>
+          <td>{$estudiante['apellidos']}</td>
+          <td>{$estudiante['nombres']}</td>
+          <td>{$estudiante['tipodocumento']}</td>
+          <td>{$estudiante['nrodocumento']}</td>
+          <td>{$estudiante['fechanacimiento']}</td>
+          <td>{$estudiante['idcarrera']}</td>
+          <td>
+            <a href='#' data-idcurso='{$estudiante['idestudiante']}' class='btn btn-danger btn-sm eliminar'><i class='bi bi-trash3-fill'></i></a>
+            <a href='#' data-idcurso='{$estudiante['idestudiante']}' class='btn btn-info btn-sm editar'><i class='bi bi-pencil-fill'></i></a>
+            </td>
+        </tr>
+      ";
+        $numeroFila++;
+    }
+  }
+
 
 }

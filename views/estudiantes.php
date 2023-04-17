@@ -13,7 +13,8 @@
 
      <!-- ÍCONOS FONTAWESOME -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+  <!-- Íconos de Bootstrap-->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -21,6 +22,21 @@
   <button type="button" class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modal-estudiante">
     Ver Formulario
   </button>
+
+  <div class="container">
+    <table id="tabla-estudiantes" class="table table-striped table-sm">
+      <thead>
+        <th>#</th>
+        <th>Apellidos</th>
+        <th>Nombres</th>
+        <th>Tipo</th>
+        <th>Documento</th>
+        <th>Nacimiento</th>
+        <th>Carrera</th>
+        <th>Operaciones</th>
+      </thead>
+    </table>
+  </div>
   
   <!-- Modal Body -->
   <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->

@@ -20,6 +20,7 @@ BEGIN
 		INNER JOIN escuelas ESC ON ESC.idescuela = CAR.idescuela
 		WHERE EST.estado = '1';
 END $$
+CALL spu_estudiantes_listar();
 
 DELIMITER $$
 CREATE PROCEDURE spu_estudiantes_registrar(
