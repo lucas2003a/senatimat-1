@@ -4,7 +4,6 @@ USE senatimat;
 DELIMITER $$
 CREATE PROCEDURE spu_estudiantes_listar()
 BEGIN
-	SELECT * FROM estudiantes;
 	
 	SELECT 	EST.idestudiante,
 				EST.apellidos, EST.nombres,
@@ -20,6 +19,12 @@ BEGIN
 		INNER JOIN escuelas ESC ON ESC.idescuela = CAR.idescuela
 		WHERE EST.estado = '1';
 END $$
+
+/*update estudiantes
+	set fotografia = NULL
+	where fotografia = '32e36f8a0bd466a48a5107b287ac4f2e2f9588c0.jpg' or
+			fotografia  = '';*/
+			
 CALL spu_estudiantes_listar();
 
 DELIMITER $$

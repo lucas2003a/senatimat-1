@@ -13,30 +13,49 @@
 
      <!-- ÍCONOS FONTAWESOME -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <!-- Íconos de Bootstrap-->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+
+  <!-- Lightbox CSS -->
+  <link rel="stylesheet" href="../dist/lightbox2/src/css/lightbox.css">
+
 </head>
 
 <body>
   <!-- Modal trigger button -->
-  <button type="button" class="btn btn-success btn-md" data-bs-toggle="modal" data-bs-target="#modal-estudiante">
+  <button type="button" class="btn btn-success btn-md mt-3" data-bs-toggle="modal" data-bs-target="#modal-estudiante">
     Ver Formulario
   </button>
 
-  <div class="container">
-    <table id="tabla-estudiantes" class="table table-striped table-sm">
-      <thead>
-        <th>#</th>
-        <th>Apellidos</th>
-        <th>Nombres</th>
-        <th>Tipo</th>
-        <th>Documento</th>
-        <th>Nacimiento</th>
-        <th>Carrera</th>
-        <th>Operaciones</th>
-      </thead>
-    </table>
-  </div>
+  <!-- <div class="container mt-3">
+    <div class="card table-responsive">
+      <div class="card-header bg-info text-light">
+        <div class="row">
+          <div class="col-md-6">
+            <strong>LISTA DE ESTUDIANTES</strong>
+          </div>
+          <div class="col-md-6 text-end">
+            <button class="btn btn-success btn-sm" id="abrir-modal" data-bs-toggle="modal" data-bs-target="#modal-estudiante"><i class="bi bi-plus-square-fill"></i> FORMULARIO ESTUDIANTE</button>
+          </div>
+        </div>
+      </div>-->
+    <div class="container mt-3">
+      <div class="table-responsive">
+        <table id="tabla-estudiantes" class="table table-striped table-sm">
+          <thead>
+            <th>#</th>
+            <th>Apellidos</th>
+            <th>Nombres</th>
+            <th>Tipo</th>
+            <th>Documento</th>
+            <th>Nacimiento</th>
+            <th>Carrera</th>
+            <th>Operaciones</th>
+          </thead>
+          <tbody>
+                
+              </tbody>
+          </table>
+      </div>
+    </div>
   
   <!-- Modal Body -->
   <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
@@ -140,6 +159,9 @@
   <!-- SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+  <!-- Lightbox JS -->
+  <script src="../dist/lightbox2/src/js/lightbox.js"></script>
+
   <script>
     $(document).ready(function() {
 
@@ -168,6 +190,21 @@
           }
         });
       }
+
+      // LISTAR ESTUDIANTES
+      function mostrarEstudiantes(){
+        $.ajax({
+          url : '../controllers/estudiante.controller.php',
+          type: 'POST',
+          data: { operacion: 'listar'},
+          dataType: 'text',
+          success : function(result){
+            $("#tabla-estudiantes tbody").html(result);
+          }
+            
+        });
+      }
+      mostrarEstudiantes();
 
       function registrarEstudiante(){
 
@@ -247,6 +284,7 @@
         obtenerSedes();
         obtenerEscuelas();
       });
+      
     });
   </script>
 

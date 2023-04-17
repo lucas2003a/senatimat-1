@@ -40,28 +40,51 @@ if (isset($_POST['operacion'])){
     $estudiante->registrarEstudiante($datosGuardar);
   }
 
-  $datosObtenidos = $estudiante->listarEstudiante();
+  if($_POST['operacion'] == 'listar'){
+    
+    $data = $estudiante->listarEstudiante();
 
-  if ($datosObtenidos){
-    $numeroFila = 1;
+    if ($data){
+      $numeroFila = 1;
+      $datosEstudiante = '';
+      // $botonFoto hace que si el usuario no tiene foto aparezca en el ícono no tiene foto
+      $botonNulo = "<a href='#' class='btn btn-sm btn-warning' title='No tiene fotografía'><i class='fa-solid fa-eye-slash'></i></a>";
+      
+      foreach ($data as $registro){
+        // $datosEstudiante: Hace que se viualice el nombre del usuario dentro del lightblox
+        $datosEstudiante = $registro['apellidos'] . ' ' . $registro['nombres'];
 
-    foreach ($datosObtenidos as $estudiante){
-      echo "
-        <tr>
-          <td>{$numeroFila}</td>
-          <td>{$estudiante['apellidos']}</td>
-          <td>{$estudiante['nombres']}</td>
-          <td>{$estudiante['tipodocumento']}</td>
-          <td>{$estudiante['nrodocumento']}</td>
-          <td>{$estudiante['fechanacimiento']}</td>
-          <td>{$estudiante['idcarrera']}</td>
-          <td>
-            <a href='#' data-idcurso='{$estudiante['idestudiante']}' class='btn btn-danger btn-sm eliminar'><i class='bi bi-trash3-fill'></i></a>
-            <a href='#' data-idcurso='{$estudiante['idestudiante']}' class='btn btn-info btn-sm editar'><i class='bi bi-pencil-fill'></i></a>
-            </td>
+        
+        // La primera parte a RENDERIZAR, es lo standar (Siempre se mostrará)
+        echo "
+          <tr>
+            <td>{$numeroFila}</td>
+            <td>{$registro['apellidos']}</td>
+            <td>{$registro['nombres']}</td>
+            <td>{$registro['tipodocumento']}</td>
+            <td>{$registro['nrodocumento']}</td>
+            <td>{$registro['fechanacimiento']}</td>
+            <td>{$registro['carrera']}</td>
+            <td>
+              <a href='#' data-idestudiante='{$registro['idestudiante']}' class='btn btn-danger btn-sm eliminar'><i class='fa-solid fa-trash-can'></i></a>
+              <a href='#' data-idestudiante='{$registro['idestudiante']}' class='btn btn-info btn-sm editar'><i class='fa-solid fa-pencil'></i></a>";
+        
+        // La segunda parte a RENDERIZAR, es el botón VER FOTOGRAFÍA
+        if ($registro['fotografia'] == ''){
+          echo $botonNulo;
+        }else{
+          // De lo contrario se va a RENDERIZAR
+          echo "<a href='../views/img/fotografias/{$registro['fotografia']}' data-lightbox='{$registro['idestudiante']}' data-title='{$datosEstudiante}'' class='btn btn-sm btn-warning'><i class='fa-solid fa-eye'></i></a>";
+        }
+
+        // La tercera parte a RENDERIZAR, cierre de la fila
+        echo "
+          </td>
         </tr>
-      ";
+        "; 
+
         $numeroFila++;
+      }
     }
   }
 
