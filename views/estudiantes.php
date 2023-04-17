@@ -32,51 +32,59 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="" id="formulario-estudiantes" autocomplete="off">
+          <!-- Da capacidad de recibir binarios al formulario: enctype="multipart/form-data"-->
+          <form action="" id="formulario-estudiantes" autocomplete="off" enctype="multipart/form-data">
             <div class="row">
+              <!-- CAMPO APELLIDOS -->
               <div class="mb-3 col-md-6">
                 <label for="apellidos" class="form-label">Apellidos</label>
                 <input type="text" class="form-control form-control-sm" id="apellidos">
               </div>
+              <!-- CAMPO NOMBRES -->
               <div class="mb-3 col-md-6">
                 <label for="nombres" class="form-label">Nombres</label>
                 <input type="text" class="form-control form-control-sm" id="nombres">
               </div>
             </div>
-
+            <!-- CAMPO TIPO DOCUMENTO -->
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label for="tipodocumento" class="form-label">Tipo Documento</label>
                 <select id="tipodocumento" class="form-select form-select-sm">
                   <option value="">Seleccione</option>
+                  <option value="D">DNI</option>
+                  <option value="C">Carnet de Extranjería</option>
                 </select>
               </div>
+              <!-- CAMPO NÚMERO DOCUMENTO-->
               <div class="mb-3 col-md-6">
                 <label for="nrodocumento" class="form-label">Número Documento</label>
                 <input type="text" class="form-control form-control-sm" id="nrodocumento">
               </div>
             </div>
-
+            <!-- CAMPO FECHA DE NACIMIENTO-->
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label for=fechanacimiento class="form-label">Fecha Nacimiento</label>
                 <input type="date" class="form-control form-control-sm" id="fechanacimiento">
               </div>
+              <!-- CAMPO SEDE-->
               <div class="mb-3 col-md-6">
-                <label for="sede" class="form-label">Sede</label>
+                <label for="sede" class="form-label">Sede: </label>
                 <select id="sede" class="form-select form-select-sm">
                   <option value="">Seleccione</option>
                 </select>
               </div>
             </div>
-
+            <!-- CAMPO ESCUELA -->
             <div class="row">
               <div class="mb-3 col-md-6">
-                <label for="escuela" class="form-label">Escuela</label>
+                <label for="escuela" class="form-label">Escuela: </label>
                 <select id="escuela" class="form-select form-select-sm">
                   <option value="">Seleccione</option>
                 </select>
               </div>
+              <!-- CAMPO CARRERAS -->
               <div class="mb-3 col-md-6">
                 <label for="carrera" class="form-label">Carreras</label>
                 <select id="carrera" class="form-select form-select-sm">
@@ -84,10 +92,11 @@
                 </select>
               </div>
             </div>
-
+            <!-- CAMPO FOTOGRAFÍA -->
               <div class="mb-3">
                 <label for="fotografia" class="form-label">Fotografía</label>
-                <input type="file" class="form-control form-control-sm" id="fotografia">
+                <!-- Atributo que impida enviar cualquier otro archivo que no sea .jgp= accept-->
+                <input type="file" accept=".jpg" class="form-control form-control-sm" id="fotografia">
               </div>
           </form>
         </div>
@@ -145,6 +154,38 @@
       }
 
       function registrarEstudiante(){
+
+        // Enviaremos los datos dentro de un objeto 
+        var formData = new FormData();
+        // .val() cuando se trabjaa con input
+        formData.append("operacion", "registrar");
+        formData.append("apellidos", $("#apellidos").val());
+        formData.append("nombres", $("#nombres").val());
+        formData.append("tipodocumento", $("#tipodocumento").val());
+        formData.append("nrodocumento", $("#nrodocumento").val());
+        formData.append("fechanacimiento", $("#fechanacimiento").val());
+        formData.append("idcarrera", $("#carrera").val());
+        formData.append("idsede", $("#sede").val());
+        formData.append("fotografia", $("#fotografia")[0].files[0]);
+        
+
+        $.ajax({
+          url: '../controllers/estudiante.controller.php',
+          type: 'POST',
+          data: formData,
+          contentType: false, // Porque se desactiva estos procesos!?, eso sucede cuando se usa un array
+          processData: false,
+          // Memoria temporal
+          cache: false,
+          success: function(){
+            $("#formulario-estudiantes")[0].reset();
+            $("#modal-estudiante").modal("hide");
+            alert("Guardado correctamente");
+          }
+        });
+      }
+
+      function preguntarRegistro(){
         Swal.fire({
           icon: 'question',
           title: 'Matrículas',
@@ -157,12 +198,13 @@
         }).then((result) => {
           // Identificando la acción del usuario
           if (result.isConfirmed){
-            console.log("Guardando datos...");
+            //console.log("Guardando datos...");
+            registrarEstudiante();
           }
         });
       }
 
-      $("#guardar-estudiante").click(registrarEstudiante);
+      $("#guardar-estudiante").click(preguntarRegistro);
 
       // Al cambiar una escuela, se actualizará las carreras
       $("#escuela").change(function (){
