@@ -53,11 +53,62 @@ CALL spu_estudiantes_registrar('Yeren Carbajal', 'Margarita', 'D', '21819126', '
 CALL spu_estudiantes_registrar('Yeren Carbajal', 'Patricia', 'C', '4390657', '1980-01-15', 5, 1, '');
 SELECT * FROM estudiantes;
 
+
+-- PROCEDIMIENTO PARA LISTAR COLABORADOR
 DELIMITER $$
-CREATE PROCEDURE spu_estudiantes_listar()
+CREATE PROCEDURE spu_colaboradores_listar()
 BEGIN
+	SELECT 	COL.idcolaborador,
+				COL.apellidos, COL.nombres,
+				CARG.cargo,
+				SED.sede,
+				COL.telefono,
+				COL.direccion,
+				COL.tipocontrato, 
+				COL.cv
+	FROM colaboradores COL
+	INNER JOIN cargos CARG ON CARG.idcargo = COL.idcargo
+	INNER JOIN sedes 	SED  ON SED.idsede = COL.idsede
+	WHERE COL.estado = '1';				
+END$$
+CALL spu_colaboradores_listar();
+
+
+-- PROCEDIMIENTO ALMACENADO PARA REGISTRAR COLABORADORES
+DELIMITER $$
+CREATE PROCEDURE spu_colaboradores_registrar(
+	IN apellidos_ 				VARCHAR(40),
+	IN nombres_ 				VARCHAR(40),
+	IN idcargo_					INT,
+	IN idsede_ 					INT,
+	IN telefono_ 				CHAR(9),
+	IN direccion_				VARCHAR(40),
+	IN tipocontrato_			CHAR(1),
+	IN cv_ 						VARCHAR(100)
+)
+BEGIN
+	-- VALIDACION DEL CONTENIDO CV (COMO CAMPO NULL)
+	IF cv_ = '' THEN
+		SET cv_ = NULL;
+	END IF;
+		
+	INSERT INTO colaboradores
+	(apellidos, nombres, idcargo, idsede, telefono, direccion, tipocontrato, cv) VALUES
+	(apellidos_, nombres_, idcargo_, idsede_, telefono_, direccion_, tipocontrato_, cv_);
 END $$
 
+CALL spu_colaboradores_registrar('Francia Minaya','Jhon Edward',1,1,'Calle Colón - Pueblo Nuevo','956834915','C','');
+SELECT * FROM colaboradores;
+
+
+
+
+-- PROCEDIMIENTO DE SEDES, EESCUELAS, CARGOS y CARRERAS LISTAR
+DELIMITER $$
+CREATE PROCEDURE spu_cargos_listar()
+BEGIN
+	SELECT * FROM cargos ORDER BY 2;
+END $$
 
 DELIMITER $$
 CREATE PROCEDURE spu_sedes_listar()

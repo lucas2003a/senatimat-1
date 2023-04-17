@@ -74,3 +74,45 @@ INSERT INTO estudiantes
 	('Nolberto Flores', 'Keysi', '159346789', '2004-01-04', 9, 4);
 
 SELECT * FROM estudiantes;
+
+-- CREACIÓN DE LA TABLA CARGOS
+CREATE TABLE cargos (
+	idcargo 				INT AUTO_INCREMENT 		PRIMARY KEY,
+	cargo 				VARCHAR(30)					NOT NULL,
+	CONSTRAINT uk_cargo_carg UNIQUE (cargo)
+)ENGINE = INNODB;
+
+INSERT INTO cargos (cargo) VALUES
+	('Instructor'),
+	('Jefe Centro'),
+	('Asistente Administrativo'),
+	('Asistente Académico'),
+	('Coordinador ETI'),
+	('Coordinador CIS');
+SELECT * FROM cargos;
+
+-- CREACION DE LA TABLA COLABORADORES
+CREATE TABLE colaboradores (
+	idcolaborador 		INT AUTO_INCREMENT 		PRIMARY KEY,
+	apellidos 			VARCHAR(40) 				NOT NULL,
+	nombres				VARCHAR(40) 				NOT NULL,
+	idcargo 				INT 							NOT NULL, -- FOREIGN KEY
+	idsede 				INT 							NOT NULL, -- FOREIGN KEY
+	telefono				CHAR(9)						NOT NULL,
+	direccion 			VARCHAR(40) 				NULL,
+	tipocontrato		CHAR(1)						NOT NULL, -- CHECK P (parcial) C (completo)
+	cv						VARCHAR(100)				NULL,
+	fecharegistro 		DATETIME 					NOT NULL DEFAULT NOW(),
+	fechaupdate 		DATETIME 					NULL,
+	estado 				CHAR(1) 						NOT NULL DEFAULT '1',
+	CONSTRAINT fk_idcargo_col			FOREIGN KEY (idcargo) REFERENCES cargos (idcargo),
+	CONSTRAINT fk_idsede_sde 			FOREIGN KEY (idsede)  REFERENCES sedes (idsede),
+	CONSTRAINT ck_tipocontrato_col	CHECK(tipocontrato IN ('P','C'))
+)ENGINE = INNODB;
+
+INSERT INTO colaboradores 
+	(apellidos, nombres, idcargo, idsede, telefono, direccion, tipocontrato, cv) VALUES 
+	('Bendezu Cardenas', 'Jose', 5, 1, '954837297', 'Calle Las Gardenias N° 120', 'C', NULL);
+
+
+SELECT * FROM colaboradores;
