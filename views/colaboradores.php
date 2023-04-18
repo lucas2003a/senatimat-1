@@ -31,15 +31,14 @@
         <div class="table-responsive">
         <table class="table table-sm table-striped" id="tabla-colaboradores">
           <colgroup> <!-- colgroup: Permite ordenar las tablas -->
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
-            <col width = "10%">
+            <col width = "2%">
             <col width = "15%">
+            <col width = "10%">
+            <col width = "11%">
+            <col width = "12%">
+            <col width = "13%">
+            <col width = "14%">
+            <col width = "10%">
             <col width = "10%">
           </colgroup>
           <thead>
@@ -52,7 +51,6 @@
               <th>Télefono</th>
               <th>Dirección</th>
               <th>Tipo Contrato</th>
-              <th>Curriculum Vitae</th>
               <th>Operaciones</th>
             </tr>
           </thead>
@@ -123,13 +121,15 @@
                 <label for="tipocontrato" class="form-label"><strong>Tipo Contrato: </strong></label>
                 <select id="tipocontrato" class="form-select form-select-sm">
                   <option value="">Seleccione</option>
+                  <option value="C">Completo</option>
+                  <option value="P">Parcial</option>
                 </select>
               </div>
               <!-- CAMPO CV -->
               <div class="mb-3 col-md-6">
                 <label for="cv" class="form-label"><strong>Curiculum Vitae</strong></label>
                 <!-- Atributo que impida enviar cualquier otro archivo que no sea .jgp= accept-->
-                <input type="file" accept=".pdf" class="form-control form-control-sm" id="cv">
+                <input type="file" accept=".pdf" class="form-control form-control-sm" id="cv" name="cv">
               </div>
             </div>
           </form> <!-- FIN DEL FORMULARIO -->
@@ -159,6 +159,110 @@
 
   <!-- Lightbox JS -->
   <script src="../dist/lightbox2/src/js/lightbox.js"></script>
+  <script>
+    $(document).ready(function (){
+
+      function obtenerCargos(){
+        // Obteniendo de forma asíncrona
+        $.ajax({
+          url : '../controllers/cargo.controller.php',
+          type : 'POST',
+          data : { operacion : 'listar'},
+          dataType : 'text',
+          success : function(result){
+            $("#cargo").html(result);
+          }
+        });
+      }
+
+      function obtenerSedes(){
+        // Obteniendo de forma asíncrona
+        $.ajax({
+          url : '../controllers/sede.controller.php',
+          type : 'POST',
+          data : { operacion : 'listar'},
+          dataType : 'text',
+          success : function(result){
+            $("#sede").html(result);
+          }
+        });
+      }
+
+      function mostrarColaboradores(){
+        $.ajax({
+          url: '../controllers/colaborador.controller.php',
+          type: 'POST',
+          data: { operacion : 'listar'},
+          dataType: 'text',
+          success: function(result){
+            $("#tabla-colaboradores tbody").html(result);
+          }
+        });
+      }
+      mostrarColaboradores();
+
+      function registrarColaborador(){
+
+        var formData = new FormData();
+
+        formData.append("operacion", "registrar");
+        formData.append("apellidos", $("#apellidos").val());
+        formData.append("nombres", $("#nombres").val());
+        formData.append("idcargo", $("#cargo").val());
+        formData.append("idsede", $("#sede").val());
+        formData.append("telefono", $("#telefono").val());        
+        formData.append("direccion", $("#direccion").val());
+        formData.append("tipocontrato", $("#tipocontrato").val());
+        formData.append("cv", $("#cv")[0].files[0]);
+
+        $.ajax({
+          url: '../controllers/colaborador.controller.php',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          cache: false,
+          success: function(){
+            $("#formulario-colaboradores")[0].reset();
+            $("#modal-colaborador").modal("hide");
+            alert("Guardado correctamente");
+
+          }
+        });
+
+      }
+
+      function preguntarRegistro(){
+        Swal.fire({
+          icon: 'warning',
+          title: 'Colaboradores',
+          text: '¿Está seguro de registrar al colaborador?',
+          footer: 'Desarrollado con PHP',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#66C744',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          cancelButtonColor: '#EA4947'
+        }).then((result) => {
+          // Identificando la acción del usuario
+          if (result.isConfirmed){
+            //console.log("Guardando datos...");
+            registrarColaborador();
+          }
+        });
+      }
+
+      $("#guardar-colaborador").click(preguntarRegistro);
+
+      // Predeterminamos un control dentro del modal
+      $("#modal-colaborador").on("shown.bs.modal", event =>{
+        $("#apellidos").focus();
+
+        obtenerCargos();
+        obtenerSedes();
+      });
+    });
+  </script>
 
 </body>
 
