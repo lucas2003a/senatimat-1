@@ -20,10 +20,10 @@ BEGIN
 		WHERE EST.estado = '1';
 END $$
 
-/*update estudiantes
-	set fotografia = NULL
-	where fotografia = '32e36f8a0bd466a48a5107b287ac4f2e2f9588c0.jpg' or
-			fotografia  = '';*/
+/*update colaboradores
+	set cv = NULL
+	where cv= '587eda0cdfed8979172d15d0cbd16c4c57b80203.pdf' or
+			cv  = '';*/
 			
 CALL spu_estudiantes_listar();
 
@@ -50,7 +50,7 @@ BEGIN
 	(apellidos_, nombres_, tipodocumento_, nrodocumento_, fechanacimiento_, idcarrera_, idsede_, fotografia_);
 END $$
 CALL spu_estudiantes_registrar('Yeren Carbajal', 'Margarita', 'D', '21819126', '1972-08-05', 5, 1, '');
-CALL spu_estudiantes_registrar('Yeren Carbajal', 'Patricia', 'C', '4390657', '1980-01-15', 5, 1, '');
+-- CALL spu_estudiantes_registrar('Yeren Carbajal', 'Patricia', 'C', '4390657', '1980-01-15', 5, 1, '');
 SELECT * FROM estudiantes;
 
 
@@ -100,7 +100,13 @@ END $$
 CALL spu_colaboradores_registrar('Francia Minaya','Jhon Edward',1,1,'Calle Colón - Pueblo Nuevo','956834915','C','');
 SELECT * FROM colaboradores;
 
-
+DELIMITER $$
+CREATE PROCEDURE spu_colaboradores_eliminar(IN idcolaborador_ INT)
+BEGIN
+	DELETE FROM colaboradores WHERE idcolaborador = idcolaborador_;
+END $$
+CALL spu_colaboradores_eliminar(3);
+SELECT * FROM colaboradores;
 
 
 -- PROCEDIMIENTO DE SEDES, EESCUELAS, CARGOS y CARRERAS LISTAR

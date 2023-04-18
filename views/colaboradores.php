@@ -14,9 +14,7 @@
   <!-- ÍCONOS FONTAWESOME -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- Lightbox CSS -->
-  <link rel="stylesheet" href="../dist/lightbox2/src/css/lightbox.css">
-
+  
 </head>
 
 <body>
@@ -157,8 +155,7 @@
   <!-- SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- Lightbox JS -->
-  <script src="../dist/lightbox2/src/js/lightbox.js"></script>
+ 
   <script>
     $(document).ready(function (){
 
@@ -227,6 +224,8 @@
             $("#modal-colaborador").modal("hide");
             alert("Guardado correctamente");
 
+            mostrarColaboradores();
+
           }
         });
 
@@ -253,6 +252,26 @@
       }
 
       $("#guardar-colaborador").click(preguntarRegistro);
+
+      // Al pulsar sobre el botón rojo, se elimine el registro
+      $("#tabla-colaboradores tbody").on("click", ".eliminar", function(){
+        const idcolaboradorEliminar = $(this).data("idcolaborador");
+        if (confirm("¿Está seguro de proceder?")){
+          $.ajax({
+            url: '../controllers/colaborador.controller.php',
+            type: 'POST',
+            data: {
+              operacion : 'eliminar',
+              idcolaborador: idcolaboradorEliminar
+            },
+            success: function(result){
+              if(result == ""){
+                mostrarColaboradores();
+              }
+            }
+          });
+        }
+      });
 
       // Predeterminamos un control dentro del modal
       $("#modal-colaborador").on("shown.bs.modal", event =>{

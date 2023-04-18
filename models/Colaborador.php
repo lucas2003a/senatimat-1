@@ -44,4 +44,49 @@ class Colaborador extends Conexion{
     }
   }
 
+  public function obtenerColaborador($idcolaborador = 0) {
+    try {
+        // Obtener el colaborador de la base de datos
+        $consulta = $this->accesoBD->prepare("CALL spu_obtener_cv(?)");
+        $consulta->execute(array($idcolaborador));
+        $registro = $consulta->fetch();
+
+        return $registro;
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+  }
+
+
+  public function eliminarColaborador($idcolaborador = 0) {
+    try {
+        // Borramos el registro de la base de datos
+        $consulta = $this->accesoBD->prepare("CALL spu_colaboradores_eliminar(?)");
+        $consulta->execute(array($idcolaborador));
+
+        return true;
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+  }
+
+
+  /*public function eliminarColaborador($idcolaborador = 0){
+    try {
+        // Obtener el colaborador de la base de datos
+        $consulta = $this->accesoBD->prepare("CALL spu_obtener_cv(?)");
+        $consulta->execute(array($idcolaborador));
+        $registro = $consulta->fetch();
+
+        // Borramos el registro de la base de datos
+        $consulta = $this->accesoBD->prepare("CALL spu_colaboradores_eliminar(?)");
+        $consulta->execute(array($idcolaborador));
+
+        return $registro['cv'];
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+  }*/
+
+
 }

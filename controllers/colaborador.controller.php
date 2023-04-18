@@ -24,7 +24,7 @@ if (isset($_POST['operacion'])){
 
       $rutaDestino = '../views/pdf/documents/';
       $fechaActual = date('c'); // C = Complete, devuelve el AÑO/MES/DIA/HORA/MINUTO/SEGUNDO
-      $nombreArchivo = $fechaActual . ".pdf";
+      $nombreArchivo = sha1($fechaActual) . ".pdf";
       $rutaDestino .= $nombreArchivo;
 
       // GUARDAMOS LA FOTOGRAfÍA EN EL SERVIDOR
@@ -34,6 +34,7 @@ if (isset($_POST['operacion'])){
       }
 
     }
+
     $colaborador->registrarColaborador($datosGuardar);
   }
 
@@ -73,7 +74,7 @@ if (isset($_POST['operacion'])){
           echo $botonNulo;
         }else{
           // De lo contrario se va a RENDERIZAR
-          echo "<a href='../views/pdf/documents/{$registro['cv']}' data-lightbox='{$registro['idcolaborador']}' data-title='{$datosColaborador}'' class='btn btn-sm btn-warning'><i class='fa-solid fa-file'></i></a>";
+          echo "<a href='../views/pdf/documents/{$registro['cv']}' data-lightbox='{$registro['idcolaborador']}' data-title='{$datosColaborador}'' class='btn btn-sm btn-warning' target='_blank'><i class='fa-solid fa-file'></i></a>";
         }
 
         // La tercera parte a RENDERIZAR, cierre de la fila
@@ -86,5 +87,55 @@ if (isset($_POST['operacion'])){
       }
     }
   }
+
+  if ($_POST['operacion'] == 'obtener_cv') {
+    // Obtener el id del colaborador
+    $idcolaborador = $_POST['idcolaborador'];
+
+    // Obtener el archivo de CV del colaborador
+    $archivoCv = $colaborador->obtenerColaborador($idcolaborador);
+
+    echo $archivoCv;
+  }
+
+  if ($_POST['operacion'] == 'eliminar') {
+    // Obtener el id del colaborador
+    $idcolaborador = $_POST['idcolaborador'];
+
+    // Obtener el registro del colaborador de la base de datos
+    $registro = $colaborador->obtenerColaborador($idcolaborador);
+
+    // Eliminar el registro del colaborador de la base de datos
+    $colaborador->eliminarColaborador($idcolaborador);
+
+    // Verificar que el colaborador tiene un archivo de CV
+    if ($registro['cv']) {
+        $rutaArchivo = '../views/pdf/documents/' . $registro['cv'];
+        if (file_exists($rutaArchivo)) {
+            // Eliminar el archivo de CV físicamente del servidor
+            unlink($rutaArchivo);
+        }
+    }
+  }
+
+
+
+  /*if ($_POST['operacion'] == 'eliminar') {
+    // Obtener el id del colaborador
+    $idcolaborador = $_POST['idcolaborador'];
+
+    // Eliminar el colaborador de la base de datos
+    $archivoCv = $colaborador->eliminarColaborador($idcolaborador);
+
+    if ($archivoCv) {
+        // Verificar que el colaborador tiene un archivo de CV
+        $rutaArchivo = '../views/pdf/documents/' . $archivoCv;
+        if (file_exists($rutaArchivo)) {
+            // Eliminar el archivo de CV físicamente del servidor
+            unlink($rutaArchivo);
+          }
+        }
+    }*/
+
 
 }
