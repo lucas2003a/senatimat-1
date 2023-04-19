@@ -194,3 +194,100 @@ BEGIN
 END $$
 
 
+-- **********************************************************************************************
+--								PROCEDIMIENTO ALMACENADO PARA LA TABLA USUARIOS
+-- **********************************************************************************************
+
+-- -------------------------------
+-- | PROCEDIMIENTO LOGIN USUARIO |
+-- -------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_login(IN nombreusuario_ VARCHAR(30))
+BEGIN
+	SELECT idusuario, nombreusuario, claveacceso,
+							apellidos, nombres, nivelacceso
+	FROM usuarios
+	WHERE nombreusuario = nombreusuario_ AND estado = '1';
+END $$
+CALL spu_usuarios_login('YorghetHy');
+
+-- -------------------------------------
+-- | PROCEDIMIENTO PARA LISTAR USUARIO |
+-- -------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_listar()
+BEGIN
+	SELECT 	idusuario,
+				nombreusuario,
+				apellidos,
+				nombres,
+				nivelacceso,
+				fecharegistro
+	FROM usuarios
+	WHERE estado = '1'
+	ORDER BY idusuario DESC;
+END $$
+CALL spu_usuarios_listar();
+
+-- ----------------------------------------------
+-- PROCEDIMIENTO ALMACENADO PARA REGISTRAR CURSOS
+-- ----------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_registrar_usuarios(
+IN nombreusuario_ 	VARCHAR(30),
+IN claveacceso_ 		VARCHAR(90),
+IN apellidos_			VARCHAR(30),
+IN nombres_				VARCHAR(30),
+IN nivelacceso_		CHAR(1)
+
+)
+BEGIN
+	INSERT INTO usuarios(nombreusuario, claveacceso, apellidos, nombres, nivelacceso) 
+	VALUES (nombreusuario_, claveacceso_, apellidos_, nombres_, nivelacceso_);
+END $$
+CALL spu_registrar_usuarios('KEYSI','SENATI','NOLBERTO FLORES','Keysi','E');
+CALL spu_usuarios_listar();
+
+-- ------------------------------------------------------
+-- | PROCEDIMIENTO PARA ELIMINAR USUARIO (DESHABILITAR) |
+-- ------------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_eliminar(IN idusuario_ INT)
+BEGIN
+	UPDATE usuarios SET estado = '0'
+	WHERE idusuario = idusuario_;
+END $$
+
+-- -----------------------------------------
+-- | PROCEDIMIENTO PARA RECUPERAR USUARIOS |
+-- -----------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_recuperar_id(IN idusuario_ INT)
+BEGIN
+	SELECT * FROM usuarios WHERE idusuario = idusuario_;
+END $$
+
+CALL spu_usuarios_recuperar_id(1);
+
+-- ------------------------------------------
+-- | PROCEDIMIENTO PARA ACTUALIZAR USUARIOS |
+-- ------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_usuarios_actualizar(
+	IN idusuario_				INT,
+	IN nombreusuario_ 		VARCHAR(30),
+	IN claveacceso_			VARCHAR(90),
+	IN apellidos_				VARCHAR(30),
+	IN nombres_					VARCHAR(30),
+	IN nivelacceso_			CHAR(1)
+)
+BEGIN
+	UPDATE usuarios SET
+	nombreusuario	= nombreusuario_,
+	claveacceso 	= claveacceso_,
+	apellidos		= apellidos_,
+	nombres 			= nombres_,
+	nivelacceso		= nivelacceso_,
+	fechaupdate		= NOW()
+	WHERE idusuario 	= idusuario_;
+END $$

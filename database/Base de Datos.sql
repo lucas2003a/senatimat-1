@@ -117,3 +117,24 @@ INSERT INTO colaboradores
 
 
 SELECT * FROM colaboradores;
+
+
+-- CREACION DE LA TABLA USUARIOS
+CREATE TABLE usuarios(
+	idusuario			INT AUTO_INCREMENT 		PRIMARY KEY,
+	nombreusuario		VARCHAR(30)					NOT NULL, -- RESTRICCION UNIQUE
+	claveacceso			VARCHAR(90) 				NOT NULL,
+	apellidos 			VARCHAR(30) 				NOT NULL,
+	nombres 				VARCHAR(30) 				NOT NULL,
+	nivelacceso			CHAR(1) 						NOT NULL, -- RESTRICCION CHECK
+	estado				CHAR(1)						NOT NULL DEFAULT '1',
+	fecharegistro		DATETIME 					NOT NULL DEFAULT NOW(),
+	fechaupdate			DATETIME						NULL,
+	CONSTRAINT uk_nombreusuario_usa 	UNIQUE(nombreusuario),
+	CONSTRAINT ck_nivelacceso_usa		CHECK(nivelacceso IN ('E','C'))
+)ENGINE = INNODB;
+
+INSERT INTO usuarios (nombreusuario, claveacceso, apellidos, nombres, nivelacceso) VALUES
+	('YorghetHy', 'SENATI', 'Hernandez Yerén', 'Yorghet Fernanda', 'E'),
+	('JhonFm', 'SENATI', 'Francia Minaya', 'Jhon Edward', 'C');
+	SELECT * FROM usuarios;
