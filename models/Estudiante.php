@@ -44,4 +44,29 @@ class Estudiante extends Conexion{
     }
   }
 
+  public function obtenerEstudiante($idestudiante = 0) {
+    try {
+        // Obtener el colaborador de la base de datos
+        $consulta = $this->accesoBD->prepare("CALL spu_obtener_fotografia(?)");
+        $consulta->execute(array($idestudiante));
+        $registro = $consulta->fetch();
+
+        return $registro;
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+  }
+
+  public function eliminarEstudiante($idestudiante = 0) {
+    try {
+        // Borramos el registro de la base de datos
+        $consulta = $this->accesoBD->prepare("CALL spu_estudiantes_eliminar(?)");
+        $consulta->execute(array($idestudiante));
+
+        return true;
+    } catch (Exception $e) {
+        die($e->getMessage());
+    }
+  }
+
 }

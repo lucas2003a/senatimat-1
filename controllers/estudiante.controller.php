@@ -74,7 +74,7 @@ if (isset($_POST['operacion'])){
           echo $botonNulo;
         }else{
           // De lo contrario se va a RENDERIZAR
-          echo "<a href='../views/img/fotografias/{$registro['fotografia']}' data-lightbox='{$registro['idestudiante']}' data-title='{$datosEstudiante}'' class='btn btn-sm btn-warning'><i class='fa-solid fa-eye'></i></a>";
+          echo "<a href='../views/img/fotografias/{$registro['fotografia']}' data-lightbox='{$registro['idestudiante']}' data-title='{$datosEstudiante}'' class='btn btn-sm btn-warning' target='_blank'><i class='fa-solid fa-eye'></i></a>";
         }
 
         // La tercera parte a RENDERIZAR, cierre de la fila
@@ -85,6 +85,36 @@ if (isset($_POST['operacion'])){
 
         $numeroFila++;
       }
+    }
+  }
+
+  if ($_POST['operacion'] == 'obtener_fotografia') {
+    // Obtener el id del estudiante
+    $idestudiante = $_POST['idestudiante'];
+
+    // Obtener la foto del estudiante
+    $archivoFoto = $estudiante->obtenerEstudiante($idestudiante);
+
+    echo $archivoFoto;
+  }
+
+  if ($_POST['operacion'] == 'eliminar') {
+    // Obtener el id del estudiante
+    $idestudiante = $_POST['idestudiante'];
+
+    
+    $registro = $estudiante->obtenerEstudiante($idestudiante);
+
+    
+    $estudiante->eliminarEstudiante($idestudiante);
+
+    // Verificar que el colaborador tiene un archivo de CV
+    if ($registro['fotografia']) {
+        $rutaArchivo = '../views/img/fotografias/' . $registro['fotografia'];
+        if (file_exists($rutaArchivo)) {
+            // Eliminar el archivo de CV físicamente del servidor
+            unlink($rutaArchivo);
+        }
     }
   }
 

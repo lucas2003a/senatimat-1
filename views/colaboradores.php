@@ -105,7 +105,7 @@
             <div class="row">
               <div class="mb-3 col-md-6">
                 <label for="telefono" class="form-label"><strong>Teléfono</strong></label>
-                <input type="text" class="form-control form-control-sm" id="telefono">
+                <input type="text" class="form-control form-control-sm" id="telefono" inputmode="numeric" pattern="\d+">
               </div>
               <!-- CAMPO DIRECCIÓN -->
               <div class="mb-3 col-md-6">

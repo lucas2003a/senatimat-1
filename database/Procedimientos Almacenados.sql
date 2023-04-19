@@ -1,6 +1,11 @@
--- PRODCEDIMIENTOS ALMACENADOS
+-- ********************************************************************************************
+-- 								PRODCEDIMIENTOS ALMACENADO PARA LA TABLA ESTUDIANTES
+-- ********************************************************************************************
 USE senatimat;
 
+-- -----------------------------------------
+-- | PROCEDIMIENTO PARA LISTAR ESTUDIANTES |
+-- -----------------------------------------
 DELIMITER $$
 CREATE PROCEDURE spu_estudiantes_listar()
 BEGIN
@@ -27,6 +32,9 @@ END $$
 			
 CALL spu_estudiantes_listar();
 
+-- --------------------------------------------
+-- | PROCEDIMIENTO PARA REGISTRAR ESTUDIANTES |
+-- --------------------------------------------
 DELIMITER $$
 CREATE PROCEDURE spu_estudiantes_registrar(
 	IN apellidos_ 				VARCHAR(40),
@@ -50,11 +58,66 @@ BEGIN
 	(apellidos_, nombres_, tipodocumento_, nrodocumento_, fechanacimiento_, idcarrera_, idsede_, fotografia_);
 END $$
 CALL spu_estudiantes_registrar('Yeren Carbajal', 'Margarita', 'D', '21819126', '1972-08-05', 5, 1, '');
--- CALL spu_estudiantes_registrar('Yeren Carbajal', 'Patricia', 'C', '4390657', '1980-01-15', 5, 1, '');
 SELECT * FROM estudiantes;
 
+-- -------------------------------------------
+-- | PROCEDIMIENTO PARA ELIMINAR ESTUDIANTES |
+-- -------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_estudiantes_eliminar(IN idestudiante_ INT)
+BEGIN
+	DELETE FROM estudiantes WHERE idestudiante = idestudiante_;
+END $$
+CALL spu_estudiantes_eliminar(5);
 
--- PROCEDIMIENTO PARA LISTAR COLABORADOR
+-- --------------------------------------------------------
+-- | PROCEDIMIENTO PARA OBTENER FOTOGRAFÍA DEL ESTUDIANTE |
+-- --------------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_obtener_fotografia(IN idestudiante_ INT)
+BEGIN
+	SELECT fotografia FROM estudiantes WHERE idestudiante = idestudiante_;
+END $$
+CALL spu_obtener_fotografia(1);
+
+-- -------------------------------------------------------------------
+-- | PROCEDIMIENTO PARA LISTAR SEDES PARA ESTUDIANTE Y COLABORADORES |
+-- -------------------------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_sedes_listar()
+BEGIN
+	SELECT * FROM sedes ORDER BY 2;
+END $$
+
+-- -----------------------------------------------------
+-- | PROCEDIMEINTO PARA LISTAR ESCUELAS DE ESTUDIANTES |
+-- -----------------------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_escuelas_listar()
+BEGIN
+	SELECT * FROM escuelas ORDER BY 2;
+END $$
+CALL spu_escuelas_listar();
+
+-- --------------------------------------
+-- | PROCEDIMIENTO PARA LISTAR CARRERAS |
+-- --------------------------------------
+DELIMITER $$
+CREATE PROCEDURE spu_carreras_listar(IN idescuela_ INT)
+BEGIN
+	SELECT idcarrera, carrera
+	 FROM carreras
+	 WHERE idescuela = idescuela_;
+END $$
+
+
+-- **********************************************************************************************
+-- 						PROCEDIMIENTO ALMACENADO PARA LA TABLA COLABORADORES
+-- **********************************************************************************************
+
+-- |||||||||||||||||||||||||||||||||||||||||||
+-- | PROCEDIMIENTO PARA LISTAR COLABORADORES |
+-- |||||||||||||||||||||||||||||||||||||||||||
 DELIMITER $$
 CREATE PROCEDURE spu_colaboradores_listar()
 BEGIN
@@ -73,8 +136,9 @@ BEGIN
 END$$
 CALL spu_colaboradores_listar();
 
-
--- PROCEDIMIENTO ALMACENADO PARA REGISTRAR COLABORADORES
+-- ||||||||||||||||||||||||||||||||||||||||||||||
+-- | PROCEDIMIENTO PARA REGISTRAR COLABORADORES |
+-- ||||||||||||||||||||||||||||||||||||||||||||||
 DELIMITER $$
 CREATE PROCEDURE spu_colaboradores_registrar(
 	IN apellidos_ 				VARCHAR(40),
@@ -96,10 +160,12 @@ BEGIN
 	(apellidos, nombres, idcargo, idsede, telefono, direccion, tipocontrato, cv) VALUES
 	(apellidos_, nombres_, idcargo_, idsede_, telefono_, direccion_, tipocontrato_, cv_);
 END $$
-
-CALL spu_colaboradores_registrar('Francia Minaya','Jhon Edward',1,1,'Calle Colón - Pueblo Nuevo','956834915','C','');
+CALL spu_colaboradores_registrar('Francia Minaya','Jhon Edward',1,1, '956834915','Calle Colón - Pueblo Nuevo','C','');
 SELECT * FROM colaboradores;
 
+-- |||||||||||||||||||||||||||||||||||||||||||||
+-- | PROCEDIMIENTO PARA ELIMINAR COLABORADORES |
+-- |||||||||||||||||||||||||||||||||||||||||||||
 DELIMITER $$
 CREATE PROCEDURE spu_colaboradores_eliminar(IN idcolaborador_ INT)
 BEGIN
@@ -108,33 +174,23 @@ END $$
 CALL spu_colaboradores_eliminar(3);
 SELECT * FROM colaboradores;
 
+-- |||||||||||||||||||||||||||||||||||||||||||||||||
+-- | PROCEDIMIENTO PARA OBTENER CV DEL COLABORADOR |
+-- |||||||||||||||||||||||||||||||||||||||||||||||||
+DELIMITER $$
+CREATE PROCEDURE spu_obtener_cv (IN idcolaborador_ INT)
+BEGIN
+  SELECT cv FROM colaboradores WHERE idcolaborador = idcolaborador_;
+END $$
+CALL spu_obtener_cv(1);
 
--- PROCEDIMIENTO DE SEDES, EESCUELAS, CARGOS y CARRERAS LISTAR
+-- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+-- | PROCEDIMIENTO PARA LSITAR CARGO DE LOS COLABORADORES |
+-- ||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 DELIMITER $$
 CREATE PROCEDURE spu_cargos_listar()
 BEGIN
 	SELECT * FROM cargos ORDER BY 2;
 END $$
 
-DELIMITER $$
-CREATE PROCEDURE spu_sedes_listar()
-BEGIN
-	SELECT * FROM sedes ORDER BY 2;
-END $$
 
-DELIMITER $$
-CREATE PROCEDURE spu_escuelas_listar()
-BEGIN
-	SELECT * FROM escuelas ORDER BY 2;
-END $$
-CALL spu_escuelas_listar();
-
-DELIMITER $$
-CREATE PROCEDURE spu_carreras_listar(IN idescuela_ INT)
-BEGIN
-	SELECT idcarrera, carrera
-	 FROM carreras
-	 WHERE idescuela = idescuela_;
-END $$
-
-CALL spu_carreras_listar(3);

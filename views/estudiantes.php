@@ -21,7 +21,7 @@
 
 <body>
   <!-- Modal trigger button -->
-  <button type="button" class="btn btn-success btn-md mt-3" data-bs-toggle="modal" data-bs-target="#modal-estudiante">
+  <button type="button" class="btn btn-success btn-md mt-3 ms-3" data-bs-toggle="modal" data-bs-target="#modal-estudiante">
     Ver Formulario
   </button>
 
@@ -233,7 +233,8 @@
           success: function(){
             $("#formulario-estudiantes")[0].reset();
             $("#modal-estudiante").modal("hide");
-            alert("Guardado correctamente");
+            //alert("Guardado correctamente");
+            mostrarEstudiantes();
           }
         });
       }
@@ -258,6 +259,26 @@
       }
 
       $("#guardar-estudiante").click(preguntarRegistro);
+
+      // Al pulsar sobre el botón rojo, se elimine el registro
+      $("#tabla-estudiantes tbody").on("click", ".eliminar", function(){
+        const idestudianteEliminar = $(this).data("idestudiante");
+        if (confirm("¿Está seguro de proceder?")){
+          $.ajax({
+            url: '../controllers/estudiante.controller.php',
+            type: 'POST',
+            data: {
+              operacion : 'eliminar',
+              idestudiante: idestudianteEliminar
+            },
+            success: function(result){
+              if(result == ""){
+                mostrarEstudiantes();
+              }
+            }
+          });
+        }
+      });
 
       // Al cambiar una escuela, se actualizará las carreras
       $("#escuela").change(function (){
